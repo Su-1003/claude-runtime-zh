@@ -113,6 +113,8 @@ public static class ClaudeZhWindow {
 [ClaudeZhWindow]::UsePhysicalCoordinates()
 $scriptPath = Join-Path $PSScriptRoot 'claude-zh.js'
 if (-not (Test-Path -LiteralPath $scriptPath -PathType Leaf)) { throw 'Missing claude-zh.js beside this launcher.' }
+$nativeMenuPath = Join-Path $PSScriptRoot 'native-menu-zh.js'
+if (-not (Test-Path -LiteralPath $nativeMenuPath -PathType Leaf)) { throw 'Missing native-menu-zh.js beside this launcher.' }
 $automation = [System.Windows.Automation.AutomationElement]
 $descendants = [System.Windows.Automation.TreeScope]::Descendants
 $signatureCache = @{}
@@ -374,10 +376,18 @@ function Get-PromptValue($prompt) {
     return $pattern.Current.Value
 }
 function Get-InjectionBody {
-    if ($Restore) { return 'window.__claudeRuntimeZh && window.__claudeRuntimeZh.restore();' }
-    $body = [System.IO.File]::ReadAllText($scriptPath, [System.Text.Encoding]::UTF8)
-    if ($Configuration) { return "window.__claudeRuntimeZhOptions = { configuration: true };`n" + $body }
-    return $body
+    $native = [System.IO.File]::ReadAllText($nativeMenuPath, [System.Text.Encoding]::UTF8)
+    if ($Restore) {
+        $body = 'window.__claudeRuntimeZh && window.__claudeRuntimeZh.restore();'
+        $operation = 'restore'
+    } else {
+        $body = [System.IO.File]::ReadAllText($scriptPath, [System.Text.Encoding]::UTF8)
+        if ($Configuration) { $body = "window.__claudeRuntimeZhOptions = { configuration: true };`n" + $body }
+        $operation = 'apply'
+    }
+    return $body + "`n" + $native + "`nconst nativeMenuResult = await window.__claudeNativeMenuZh." + $operation + '();' +
+        "`nconsole.info('CLAUDE_NATIVE_MENU_' + JSON.stringify(typeof window.__claudeNativeMenuZh.inspect === 'function' ? await window.__claudeNativeMenuZh.inspect() : window.__claudeNativeMenuZh.status()));" +
+        "`nif (!nativeMenuResult.supported) console.warn('Native menu bridge unavailable; page text only.');"
 }
 function Focus-ConsolePrompt($dev, $root, $prompt) {
     $window = $root.Current.BoundingRectangle
@@ -511,7 +521,7 @@ if ($Diagnose) {
     Write-Host ('Text node count: ' + $items.Count)
     foreach ($element in $items) {
         $name = $element.Current.Name
-        if ($name.Length -lt 1000 -and $name -match 'CLAUDE_ZH_OK_|CLAUDE_ZH_FAILED|Uncaught|SyntaxError|ReferenceError|TypeError|Warning: Don.t paste|allow pasting|runtime Chinese|\u8fd0\u884c\u65f6\u6c49\u5316') {
+        if ($name.Length -lt 1000 -and $name -match 'CLAUDE_NATIVE_MENU_|CLAUDE_ZH_OK_|CLAUDE_ZH_FAILED|Uncaught|SyntaxError|ReferenceError|TypeError|Warning: Don.t paste|allow pasting|runtime Chinese|\u8fd0\u884c\u65f6\u6c49\u5316') {
             Write-Host $name
         }
     }
@@ -633,7 +643,7 @@ if (-not $ApplyWorker) {
         if ($main.Count -eq 1) { Focus-Window $main[0] }
         Write-Host '[5/5] Returned to Claude.'
         if ($Restore) { Write-Host 'SUCCESS: English UI restored.' }
-        else { Write-Host 'SUCCESS: runtime Chinese UI applied. Signed program files and API settings were not changed.' }
+        else { Write-Host 'SUCCESS: Chinese UI applied. Native menu language persists when supported; Restore reverts the saved locale. Signed program files and API settings were not changed.' }
         Write-Host 'After restarting Claude, use this launcher again. No startup task or permanent hook was installed.'
         exit 0
     } catch {

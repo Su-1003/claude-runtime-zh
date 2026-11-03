@@ -328,7 +328,7 @@
     if (timer !== null) return;
     timer = setTimeout(() => { timer = null; refresh(); }, 100);
   });
-  const controller = Object.freeze({version: "0.4.0", restore, refresh,
+  const controller = Object.freeze({version: "0.5.0", restore, refresh,
     status: () => ({active, textNodes: textRecords.size, elements: attrRecords.size})});
   window[KEY] = controller;
   if (document.body) refresh();
