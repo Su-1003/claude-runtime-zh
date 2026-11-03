@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN" data-claude-zh-preview>
+<meta charset="utf-8"><title>v0.4.0 名称保护和权限提示验证</title>
+<style>body{font:15px/1.6 system-ui;margin:24px}section{padding:12px;border:1px solid #ddd;margin:8px 0}pre{white-space:pre-wrap}</style>
+<section>
+ <h2 id="workspace">Workspace</h2>
+ <a href="/project/abc" id="project-link"><span>Settings</span></a>
+ <div data-testid="sidebar-projects"><button><span class="truncate" id="sidebar-name">General</span></button></div>
+ <span data-testid="workspace-name" id="workspace-name">Privacy</span>
+ <button data-testid="move-into-project-item" id="project-option">Save</button>
+ <span data-testid="bound-folder-chin-label" id="folder-chip">Settings</span>
+ <h1 data-project-name id="project-heading">Projects</h1>
+ <button id="functional-project">Create a project</button>
+ <p id="instructions">Add instructions to tailor Claude’s responses</p>
+ <span id="private">Only you</span>
+ <p id="memory">Ask Claude to remember something and it’ll save it here.</p>
+ <div id="routine">Set up recurring tasks for this project.</div>
+ <div id="efficient">Most efficient for everyday tasks</div>
+ <div id="fast">Fastest for quick answers</div>
+ <button id="model">Deepseek-v4-pro</button>
+</section>
+<section role="dialog">
+ <h2 id="permission-full">Allow Claude to change files in “日常”?</h2>
+ <p id="permission-body">Claude can edit, delete, and share these files with connected tools.</p>
+ <button id="allow">Allow</button><button id="always">Always allow</button><button id="cancel">Cancel</button>
+</section>
+<section role="dialog">
+ <h2 id="permission-split">Allow Claude to change files in “<span id="dynamic-folder">Settings</span>”?</h2>
+</section>
+<section role="alert">
+ <div id="permanent-split">Allow Claude to permanently delete files in your <b id="delete-folder">Example</b> folder during this task?</div>
+ <p id="permanent-description">Claude is asking because it wants to delete <code id="filename">.write_test</code>. Allowing covers the whole folder. Once allowed, this permission can’t be revoked without starting a new task. Deleted files can’t be restored.</p>
+ <button id="delete">Delete</button>
+</section>
+<section>
+ <p id="permanent-full">Allow Claude to permanently delete files in your Example  Files folder during this task?</p>
+ <p id="delete-description-full">Claude is asking because it wants to delete .write_test. Allowing covers the whole folder.</p>
+ <input id="input" value="Allow Claude to change files in &quot;Settings&quot;?">
+ <div data-message-author-role="user"><h2 id="protected-heading">Allow Claude to change files in “Settings”?</h2><p id="protected-body">Only you</p></div>
+ <pre id="protected-code">Most efficient for everyday tasks</pre>
+</section>
+<pre id="test-results" data-claude-zh-ignore>正在验证…</pre>
+<script>
+window.__clicks=0;for(const id of ['allow','always','cancel','delete'])document.getElementById(id).onclick=()=>window.__clicks++;
+window.__originals=Object.fromEntries(['workspace','project-link','sidebar-name','workspace-name','project-option','folder-chip','project-heading','permission-full','permission-split','permanent-split','permanent-description'].map(id=>[id,document.getElementById(id).textContent]));
+</script>
+<script src="claude-zh.js"></script>
+<script>
+(async()=>{
+ const $=id=>document.getElementById(id),tests=[];
+ const check=(name,passed)=>tests.push({name,passed:!!passed});
+ const wait=()=>new Promise(resolve=>setTimeout(resolve,250));
+ try {
+  check('Workspace 原样保留',$('workspace').textContent==='Workspace');
+  check('项目链接名保留',$('project-link').textContent==='Settings');
+  check('侧栏项目名保留',$('sidebar-name').textContent==='General');
+  check('工作区名称保留',$('workspace-name').textContent==='Privacy');
+  check('项目选项名称保留',$('project-option').textContent==='Save');
+  check('绑定文件夹名称保留',$('folder-chip').textContent==='Settings');
+  check('项目标题名称保留',$('project-heading').textContent==='Projects');
+  check('固定项目功能仍翻译',$('functional-project').textContent==='创建项目');
+  check('指令提示翻译',$('instructions').textContent==='添加指令，调整 Claude 的回复方式');
+  check('仅你可见提示翻译',$('private').textContent==='仅你可见');
+  check('记忆说明翻译',$('memory').textContent.includes('记住的内容'));
+  check('定期任务说明翻译',$('routine').textContent==='为此项目设置定期任务。');
+  check('两条模型说明翻译',$('efficient').textContent==='日常任务的高效之选'&&$('fast').textContent==='快速作答，响应最快');
+  check('模型名称保留',$('model').textContent==='Deepseek-v4-pro');
+  check('完整权限标题保留目录名',$('permission-full').textContent==='允许 Claude 修改“日常”中的文件吗？');
+  check('分节点权限标题保留动态目录名',$('permission-split').textContent==='允许 Claude 修改“Settings”中的文件吗？'&&$('dynamic-folder').textContent==='Settings');
+  check('编辑删除分享权限语义完整',$('permission-body').textContent==='Claude 可以编辑、删除这些文件，并通过已连接的工具分享它们。');
+  check('分节点永久删除标题翻译',$('permanent-split').textContent==='允许 Claude 在本次任务期间永久删除 Example 文件夹中的文件吗？');
+  check('动态文件名和文件夹名保留',$('filename').textContent==='.write_test'&&$('delete-folder').textContent==='Example');
+  check('整个文件夹授权和不可撤销警告保留',$('permanent-description').textContent.includes('整个文件夹')&&$('permanent-description').textContent.includes('开始新任务')&&$('permanent-description').textContent.includes('无法恢复'));
+  check('目录名内部空格不被合并',$('permanent-full').textContent==='允许 Claude 在本次任务期间永久删除 Example  Files 文件夹中的文件吗？');
+  check('完整删除原因保留文件名',$('delete-description-full').textContent==='Claude 准备删除 .write_test，因此请求权限。授权范围涵盖整个文件夹。');
+  check('会话中的同句标题与正文不翻译',$('protected-heading').textContent==='Allow Claude to change files in “Settings”?'&&$('protected-body').textContent==='Only you');
+  check('代码与输入值保留',$('protected-code').textContent==='Most efficient for everyday tasks'&&$('input').value==='Allow Claude to change files in "Settings"?');
+  check('未点击授权、始终允许、取消或删除',window.__clicks===0);
+  $('private').textContent='Only you';await wait();
+  check('动态重绘后仍翻译',$('private').textContent==='仅你可见');
+  check('再次刷新不翻译动态目录名',$('dynamic-folder').textContent==='Settings');
+  window.__claudeRuntimeZh.restore();
+  check('权限标题和说明可恢复',Object.entries(window.__originals).every(([id,value])=>$(id).textContent===value));
+  check('恢复后仍无点击',window.__clicks===0);
+ } catch(error) { tests.push({name:'异常：'+error.message,passed:false}); }
+ const passed=tests.length>0&&tests.every(t=>t.passed);
+ document.documentElement.dataset.testStatus=passed?'passed':'failed';
+ $('test-results').textContent=JSON.stringify({passed,tests},null,2);
+})();
+</script>
+</html>

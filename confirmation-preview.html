@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN" data-claude-zh-preview>
+<meta charset="utf-8"><title>删除确认弹窗翻译验证</title>
+<style>body{font:16px/1.7 system-ui;margin:32px}section{padding:20px;border:1px solid #ccc;border-radius:12px;max-width:620px}pre{white-space:pre-wrap}</style>
+<section role="alertdialog">
+  <h2>Delete task</h2>
+  <p id="description">Are you sure you want to delete this task?</p>
+  <p id="other">Interface font</p>
+  <div data-message-author-role="user"><p id="protected">Are you sure you want to delete this task?</p></div>
+  <button id="cancel">Cancel</button><button id="delete">Delete</button>
+</section>
+<p id="outside">Are you sure you want to delete this task?</p>
+<section>
+  <button id="new-artifact">New artifact</button>
+  <div id="artifact-hint">Create your first artifact</div>
+  <div data-message-author-role="user"><p id="artifact-user-text">Create your first artifact</p></div>
+  <pre id="artifact-code">Create your first artifact</pre>
+  <input id="artifact-input" value="Create your first artifact">
+</section>
+<pre id="test-results" data-claude-zh-ignore>正在验证…</pre>
+<script>
+window.__deleteClicks=0;window.__cancelClicks=0;
+document.getElementById('delete').onclick=()=>window.__deleteClicks++;
+document.getElementById('cancel').onclick=()=>window.__cancelClicks++;
+</script>
+<script src="claude-zh.js"></script>
+<script>
+(async()=>{
+  const $=id=>document.getElementById(id);
+  const original='Are you sure you want to delete this task?';
+  const results=[];
+  const check=(name,passed)=>results.push({name,passed:!!passed});
+  const wait=()=>new Promise(resolve=>setTimeout(resolve,240));
+  check('确认正文已翻译',$('description').textContent==='确定要删除这个任务吗？');
+  check('没有点击删除或取消按钮',window.__deleteClicks===0&&window.__cancelClicks===0);
+  check('受保护的会话正文保留英文',$('protected').textContent===original);
+  check('未扩大到任意弹窗正文',$('other').textContent==='Interface font');
+  check('普通页面中的同句正文不翻译',$('outside').textContent===original);
+  check('新建作品按钮翻译',$('new-artifact').textContent==='新建作品');
+  check('作品空页面说明翻译',$('artifact-hint').textContent==='创建你的第一个作品');
+  check('作品说明规则不修改会话、代码和输入值',
+    $('artifact-user-text').textContent==='Create your first artifact'&&
+    $('artifact-code').textContent==='Create your first artifact'&&
+    $('artifact-input').value==='Create your first artifact');
+  const dynamic=document.createElement('section');
+  dynamic.setAttribute('role','dialog');
+  dynamic.innerHTML='<p id="dynamic-description">Are you sure you want to delete this task?</p>';
+  document.body.append(dynamic);
+  await wait();
+  check('后来打开的确认弹窗也翻译',$('dynamic-description').textContent==='确定要删除这个任务吗？');
+  window.__claudeRuntimeZh.restore();
+  check('恢复英文包含初始及动态确认正文',$('description').textContent===original&&$('dynamic-description').textContent===original);
+  check('作品按钮和空页面说明可恢复英文',$('new-artifact').textContent==='New artifact'&&$('artifact-hint').textContent==='Create your first artifact');
+  check('恢复过程仍未点击任何按钮',window.__deleteClicks===0&&window.__cancelClicks===0);
+  const passed=results.every(result=>result.passed);
+  document.documentElement.dataset.testStatus=passed?'passed':'failed';
+  $('test-results').textContent=JSON.stringify({passed,tests:results},null,2);
+})();
+</script>
+</html>

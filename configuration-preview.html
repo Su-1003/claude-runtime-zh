@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN" data-claude-zh-preview>
+<meta charset="utf-8"><title>第三方配置汉化独立验证</title>
+<style>body{max-width:900px;margin:40px auto;font:16px/1.7 system-ui;background:#f7f5f0}section{background:white;border-radius:12px;padding:24px}input,select{padding:9px;border:1px solid #ccc;border-radius:6px;min-width:300px}label{display:block;margin:12px 0}pre{white-space:pre-wrap}</style>
+<section>
+<div id="heading">Configure third-party inference</div>
+<nav><button>Connection</button><button>Capabilities</button><button>Connectors</button><button>Telemetry &amp; updates</button></nav>
+<p id="description">Choose where Claude Desktop sends inference requests.</p>
+<label id="credential-label" for="key">Gateway API key</label><input id="key" type="password" value="TEST-ONLY-NOT-A-REAL-KEY">
+<label for="gateway">Gateway base URL</label><input id="gateway" value="http://127.0.0.1:15721/claude-desktop">
+<label for="model">Model</label><input id="model" value="deepseek-flash">
+<label for="auth">Gateway auth scheme</label><select id="auth"><option value="bearer">bearer</option><option value="x-api-key">x-api-key</option></select>
+<p id="auth-help">How the gateway credential is sent on the wire (Authorization: Bearer vs x-api-key header).</p>
+<button id="apply">Apply Changes</button>
+</section>
+<pre id="test-results" data-claude-zh-ignore>正在验证…</pre>
+<script>
+window.__baseline=Object.fromEntries(['key','gateway','model','auth'].map(id=>[id,document.getElementById(id).value]));
+window.__applyClicks=0;document.getElementById('apply').onclick=()=>window.__applyClicks++;
+window.__claudeRuntimeZhOptions={configuration:true};
+</script>
+<script src="claude-zh.js"></script>
+<script>
+setTimeout(()=>{
+ const tests=[
+  {name:'配置标题翻译',passed:document.getElementById('heading').textContent==='配置第三方推理服务'},
+  {name:'说明段落翻译',passed:document.getElementById('description').textContent.includes('发送推理请求')},
+  {name:'API 密钥、地址、模型和认证值原样保留',passed:Object.entries(window.__baseline).every(([id,v])=>document.getElementById(id).value===v)},
+  {name:'认证方式说明翻译',passed:document.getElementById('auth-help').textContent.includes('发送方式')},
+  {name:'应用按钮仅改显示，未触发保存',passed:document.getElementById('apply').textContent==='应用更改'&&window.__applyClicks===0}
+ ];
+ window.__claudeRuntimeZh.restore();
+ tests.push({name:'配置页面可恢复英文',passed:document.getElementById('heading').textContent==='Configure third-party inference'&&document.getElementById('apply').textContent==='Apply Changes'});
+ const passed=tests.every(t=>t.passed);document.documentElement.dataset.testStatus=passed?'passed':'failed';
+ document.getElementById('test-results').textContent=JSON.stringify({passed,tests},null,2);
+},250);
+</script>
+</html>

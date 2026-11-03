@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN" data-claude-zh-preview>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude 运行时汉化 · 独立预览</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#f4f1eb;color:#292824;font:16px/1.6 system-ui,"Microsoft YaHei",sans-serif}
+  header,main,footer{max-width:1020px;margin:auto;padding:24px}header h1{font-size:28px;margin:0 0 8px}
+  p{margin:8px 0;color:#625f57}.actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  button{font:inherit;border:1px solid #d4cfc4;border-radius:8px;background:#fff;padding:8px 15px;cursor:pointer}
+  button:hover{background:#eee9df}button.primary{background:#303e35;color:white;border-color:#303e35}
+  .shell{display:grid;grid-template-columns:210px 1fr;border:1px solid #d8d2c7;border-radius:16px;overflow:hidden;background:#fff}
+  nav{padding:22px;background:#eae5dc;display:flex;flex-direction:column;gap:10px}nav button{text-align:left}
+  section{padding:24px}h2{margin-top:0}label{display:block;margin-top:18px}input,textarea{font:inherit;border:1px solid #ccc;border-radius:8px;padding:10px;width:100%;background:white}
+  .message{border:1px dashed #bdb6a9;border-radius:10px;padding:16px;margin-top:22px}.message p{color:#36332d}
+  pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eae5dc;padding:16px;border-radius:10px;font-size:13px}
+  .hint{font-size:13px}.test-good{color:#245d38}.test-bad{color:#9c352b}footer{padding-top:0}
+  @media(max-width:650px){.shell{grid-template-columns:1fr}nav{flex-direction:row;flex-wrap:wrap}header,main,footer{padding:16px}}
+</style>
+<header data-claude-zh-ignore>
+  <h1>Claude 运行时汉化</h1>
+  <p>这是独立测试页面，不是 Claude，也不会连接你的账号。它展示精确翻译和内容保护的效果。</p>
+  <div class="actions"><button class="primary" id="enable">启用汉化</button><button id="restore">恢复英文</button><button id="rerun">重跑验证</button></div>
+</header>
+<main>
+  <div class="shell" id="fixture">
+    <nav><button id="new-chat">New chat</button><button>Projects</button><button>Cowork</button><button>Settings</button></nav>
+    <section>
+      <h2 id="heading">Settings</h2>
+      <label for="name">Name</label><input id="name" value="hours" placeholder="Search">
+      <label for="composer">Message Claude</label><textarea id="composer" placeholder="Message Claude">Save hours</textarea>
+      <div class="actions"><button id="save" title="Save changes" aria-label="Save">Save</button><button id="dynamic">Close</button></div>
+      <div class="actions"><button id="unit">hours</button><button id="template">{hours}</button></div>
+      <div class="message" data-message-author-role="assistant">
+        <p>以下模拟会话内容应保持原样：</p><h3 id="protected-heading">Settings</h3>
+        <p id="message">Save hours</p><button id="message-button">Save</button>
+        <pre><code id="code">const unit = "hours"; const options = { hours: 2 };</code></pre>
+      </div>
+    </section>
+  </div>
+</main>
+<section role="dialog" aria-label="Settings" id="settings-fixture" style="max-width:972px;margin:0 auto;background:white;border:1px solid #d8d2c7;border-radius:16px">
+  <h2>设置页补全预览</h2>
+  <div id="setting-label">Interface font</div>
+  <p id="setting-description">Font for the whole interface — menus, sidebars, and panels.</p>
+  <p id="privacy-heading">What Anthropic doesn’t see</p>
+  <ul><li id="privacy-item">Your prompts, Claude’s responses, or any conversation content</li></ul>
+  <p id="privacy-whole">You’re running Claude through your organization’s own inference provider (127.0.0.1:15721). Your conversations are sent there, not to Anthropic, and are governed by your organization’s agreement with that provider.</p>
+  <p id="privacy-split"><span>You’re running Claude through your organization’s own inference provider (</span><strong id="provider-host">127.0.0.1:15721</strong><span>). Your conversations are sent there, not to Anthropic, and are governed by your organization’s agreement with that provider.</span></p>
+  <p id="memory-description">Claude saves what it learns about you and your work during Cowork sessions. These files are stored on this device.</p>
+  <div data-message-author-role="user"><p id="settings-user-content">Interface font</p></div>
+</section>
+<section role="dialog" aria-label="Document preview"><p id="other-dialog">Interface font</p></section>
+<footer data-claude-zh-ignore>
+  <p class="hint">此方案只覆盖词库内的界面标签。原生菜单、聊天内容和长篇说明不会自动汉化。</p>
+  <h3>浏览器自动验证</h3><pre id="test-results">正在验证…</pre>
+</footer>
+<script src="claude-zh.js"></script>
+<script src="preview-tests.js"></script>
+</html>
