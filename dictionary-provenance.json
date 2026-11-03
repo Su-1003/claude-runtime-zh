@@ -1,0 +1,22 @@
+{
+  "entries": 29389,
+  "ambiguous_labels_skipped": 186,
+  "source": "claude-desktop-zh-cn-main.zip",
+  "inputs_read_only": [
+    {
+      "path": "app.asar",
+      "sha256": "f0058d0b13c4787a2f2c1684bbb48b7352efffc68a1e35d8ca574698afa90a63"
+    },
+    {
+      "path": "ion-dist.asar",
+      "sha256": "bdd0f5d61e8c234331b5bdbb7ddff296ad6b888ce762177fb6bfecc950c03266"
+    },
+    {
+      "path": "claude-desktop-zh-cn-main.zip",
+      "sha256": "19c7a92effe6cb3e8f6145a86dc00c742d065a6a1f6ed7e59aeedbe2374a4a70"
+    }
+  ],
+  "upstream": "https://github.com/javaht/claude-desktop-zh-cn",
+  "license": "MIT; see UPSTREAM-LICENSE.txt",
+  "application_files_written": []
+}
