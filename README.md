@@ -2,13 +2,13 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-A third-party Chinese interface script for Claude Desktop on Windows. Run the launcher to translate interface text in the current window. Run it again after closing or fully refreshing the page.
+A third-party Chinese interface script for Claude Desktop on Windows. Run the launcher to translate interface text in the current window. Page translation must be reapplied after a restart or full page refresh. Native menu language persists until restored.
 
-**Current version: v0.4.0. This is not an official Anthropic project.**
+**Current version: v0.5.0. This is not an official Anthropic project.**
 
 ## Download and use
 
-1. Download `Claude-runtime-zh-v0.4.0.zip` from [Releases](https://github.com/Su-1003/claude-runtime-zh/releases/latest) and extract the entire archive to a writable folder.
+1. Download `Claude-runtime-zh-v0.5.0.zip` from [Releases](https://github.com/Su-1003/claude-runtime-zh/releases/latest) and extract the entire archive to a writable folder.
 2. Open Claude Desktop. Before first use, enable **Developer Mode** yourself. If DevTools shows a paste safety prompt, review and handle it yourself.
 3. Double-click **一键启动汉化.cmd** (apply Chinese). Avoid using the keyboard, mouse, or clipboard while it runs so that focus and copied content remain stable.
 4. Wait for `SUCCESS` and confirm that the interface is in Chinese. To restore English, double-click **一键恢复英文.cmd** (restore English).
@@ -24,13 +24,14 @@ You can move or rename the extracted folder. Keep its internal structure intact 
 - Does not modify Claude's EXE or ASAR files, install startup tasks or background services, or change API keys, gateways, models, or proxy settings.
 - The page script does not initiate network requests. This statement does not cover Claude's own network activity.
 - Attempts to skip input fields, code, common conversation content, file previews, and recognized custom project names, model names, and dynamic paths. These protections need revalidation when the interface structure changes.
-- Native Windows/Electron menus may remain in English. Unlisted text and new interface structures may not be translated.
+- Supports native context-menu labels such as Undo, Redo, Cut, Copy, Paste, Select All, and Inspect Element through Claude Desktop's existing language bridge and built-in `zh-Hans` catalog. This also affects other native UI labels and persists across restarts. The prior locale is backed up in page-local storage before changing it. The restore launcher reverts that saved locale only if it has not since been changed elsewhere.
+- If the native language bridge is unavailable, page translation still works and a console warning reports that native menus were skipped. Native locale changes or verification failures stop the launcher. Unlisted text and new interface structures may not be translated.
 
 ## Troubleshooting
 
 **The interface returns to English after restarting.**
 
-This translation runs in the current page. Run the launcher again after restarting Claude or fully refreshing the page.
+Page translation runs in the current page. Run the launcher again after restarting Claude or fully refreshing it. Native menu language persists separately until you use the restore launcher.
 
 **DevTools opens, but the interface stays in English.**
 
@@ -46,7 +47,7 @@ Review this project's code and decide how to handle the prompt yourself. The scr
 
 **Some Chinese text remains after restoring English.**
 
-Try the restore launcher again. Fully refreshing or restarting Claude removes this project's runtime script.
+Try the restore launcher again. A full refresh or restart removes the page script, but does not reset the native menu language. Keep the page-local locale backup until restoration succeeds; clearing app/site data can remove it. If no backup exists, or the native language was already Chinese before applying this script, restoration does not force a different native language.
 
 **The clipboard contains a long block of code.**
 
@@ -61,6 +62,8 @@ Running the launcher does not require installing Python or Node.js. These tools 
 ```powershell
 node --check claude-zh.js
 node test-safety.cjs
+node test-native-menu.cjs
+node test-native-payload.cjs
 python -m unittest test_dictionary.py
 powershell.exe -NoProfile -MTA -ExecutionPolicy Bypass -File test-unified-launcher.ps1
 powershell.exe -NoProfile -MTA -ExecutionPolicy Bypass -File test-launcher-reliability.ps1
@@ -75,7 +78,7 @@ python verify.py --page confirmation-preview.html --report confirmation-verifica
 python verify.py --page optimization-preview.html --report optimization-verification.json
 ```
 
-These tests use isolated local fixtures. They do not approve permissions, delete files, or send messages in a real Claude window. Real-window compatibility requires separate validation. See [TESTING.md](TESTING.md) for the recorded test scope and results in Chinese.
+These tests use isolated local fixtures. They do not approve permissions, delete files, or send messages in a real Claude window. Real-window compatibility requires separate validation. See [TESTING.md](TESTING.md) for the recorded test scope and results in Chinese, and [integrity-v050.json](integrity-v050.json) for the unchanged installation hashes and Valid signature.
 
 To rebuild the dictionary:
 

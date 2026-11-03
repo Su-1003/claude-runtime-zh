@@ -1,0 +1,30 @@
+{
+  "Version": "0.5.0",
+  "CheckedAt": "2026-11-03T23:49:02.0909135+08:00",
+  "Baseline": "Saved original v0.4.0 integrity baseline, retained without modification",
+  "Files": [
+    {
+      "File": "claude.exe",
+      "SHA256": "F604EA91B306F0A92D8BE8AF7FDF2AD91C25A520DA5AEE3178ADEF593F89BDE9",
+      "OriginalSHA256": "F604EA91B306F0A92D8BE8AF7FDF2AD91C25A520DA5AEE3178ADEF593F89BDE9",
+      "MatchesOriginal": true,
+      "Bytes": 246986576
+    },
+    {
+      "File": "resources\\app.asar",
+      "SHA256": "F0058D0B13C4787A2F2C1684BBB48B7352EFFFC68A1E35D8CA574698AFA90A63",
+      "OriginalSHA256": "F0058D0B13C4787A2F2C1684BBB48B7352EFFFC68A1E35D8CA574698AFA90A63",
+      "MatchesOriginal": true,
+      "Bytes": 57748956
+    },
+    {
+      "File": "resources\\ion-dist.asar",
+      "SHA256": "BDD0F5D61E8C234331B5BDBB7DDFF296AD6B888CE762177FB6BFECC950C03266",
+      "OriginalSHA256": "BDD0F5D61E8C234331B5BDBB7DDFF296AD6B888CE762177FB6BFECC950C03266",
+      "MatchesOriginal": true,
+      "Bytes": 193686231
+    }
+  ],
+  "Signature": "Valid",
+  "Signer": "CN=\"Anthropic, PBC\", O=\"Anthropic, PBC\", L=San Francisco, S=California, C=US, SERIALNUMBER=4860621, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US"
+}

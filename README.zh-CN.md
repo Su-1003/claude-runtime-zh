@@ -2,13 +2,13 @@
 
 [English](README.md) | **简体中文**
 
-适用于 Windows 版 Claude Desktop 的第三方中文界面脚本。双击入口，将当前窗口中的界面文案替换为中文；关闭或完整刷新页面后，需要重新运行。
+适用于 Windows 版 Claude Desktop 的第三方中文界面脚本。双击入口，将当前窗口中的界面文案替换为中文；页面汉化在重启或完整刷新后需要重新运行；原生菜单语言会保留，直到使用恢复入口还原。
 
-**当前版本：v0.4.0。非 Anthropic 官方项目。**
+**当前版本：v0.5.0。非 Anthropic 官方项目。**
 
 ## 下载与使用
 
-1. 在本仓库右侧的 **Releases** 中下载 `Claude-runtime-zh-v0.4.0.zip`，完整解压到有写入权限的普通文件夹。
+1. 在本仓库右侧的 **Releases** 中下载 `Claude-runtime-zh-v0.5.0.zip`，完整解压到有写入权限的普通文件夹。
 2. 打开 Claude Desktop。首次使用需由本人启用 Claude 的 **Developer Mode**；开发者工具若显示粘贴安全提示，请本人阅读并处理。
 3. 双击 **一键启动汉化.cmd**。执行期间暂停键鼠及剪贴板操作，避免焦点或复制内容被改变。
 4. 等待出现 `SUCCESS`，确认 Claude 界面变为中文。需要恢复时，双击 **一键恢复英文.cmd**。
@@ -24,13 +24,14 @@
 - 不修改 Claude 的 EXE 或 ASAR 文件，不安装开机任务或常驻服务。不修改密钥、网关、模型和代理配置。
 - 页面脚本不主动发送网络请求；Claude 本身的联网行为不受此说明影响。
 - 尽量跳过输入框、代码、常见会话正文、文件预览，以及已识别的自定义项目名、模型名和动态路径。页面结构变化后，这些保护需要重新验证。
-- 原生 Windows/Electron 菜单可能仍是英文；未收录文案、新版页面结构可能漏译。
+- 通过 Claude 自带语言接口及 `zh-Hans` 词库，支持右键菜单的撤销、重做、剪切、复制、粘贴、全选和检查元素。它也会影响其他原生界面文案，并跨重启保留。切换前先在页面本地存储备份原语言；恢复入口仅在语言未被另行修改时还原该备份。
+- 原生语言接口不可用时仍可进行页面汉化，控制台会提示跳过原生菜单；原生切换或校验失败则停止。未收录文案、新版页面结构仍可能漏译。
 
 ## 常见问题
 
 **重启后又变成英文？**
 
-这是运行时汉化。每次 Claude 重启或页面完整刷新后，重新双击入口即可。
+页面部分是运行时汉化。每次 Claude 重启或页面完整刷新后，重新双击入口即可。原生菜单语言会单独保留，直到运行恢复入口。
 
 **只弹出开发者工具，界面没有变中文？**
 
@@ -46,7 +47,7 @@
 
 **恢复英文后还有部分中文？**
 
-先尝试重新运行恢复入口；完整刷新或重启 Claude 会移除本项目的运行时脚本。
+先尝试重新运行恢复入口。完整刷新或重启只会移除页面脚本，不会自动重置原生菜单语言。恢复成功前请保留页面本地的原语言备份，清除应用或站点数据可能使其丢失。没有备份、或应用原本就是中文时，脚本不会强制更改原生语言。
 
 **剪贴板里出现一大段代码？**
 
@@ -61,6 +62,8 @@
 ```powershell
 node --check claude-zh.js
 node test-safety.cjs
+node test-native-menu.cjs
+node test-native-payload.cjs
 python -m unittest test_dictionary.py
 powershell.exe -NoProfile -MTA -ExecutionPolicy Bypass -File test-unified-launcher.ps1
 powershell.exe -NoProfile -MTA -ExecutionPolicy Bypass -File test-launcher-reliability.ps1
@@ -75,7 +78,7 @@ python verify.py --page confirmation-preview.html --report confirmation-verifica
 python verify.py --page optimization-preview.html --report optimization-verification.json
 ```
 
-这些测试使用独立本地测试页，不会对真实 Claude 窗口执行授权、删除或发送消息。真实窗口兼容性仍需另行验证。
+这些测试使用独立本地测试页，不会对真实 Claude 窗口执行授权、删除或发送消息。真实窗口兼容性仍需另行验证。本版测试范围见 [TESTING.md](TESTING.md)，原版哈希及签名复核见 [integrity-v050.json](integrity-v050.json)。
 
 词库重建入口：
 
