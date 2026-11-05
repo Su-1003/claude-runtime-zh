@@ -8,7 +8,7 @@
 
 ## 下载与使用
 
-1. 在本仓库右侧的 **Releases** 中下载 `Claude-runtime-zh-v0.5.1.zip`，完整解压到有写入权限的普通文件夹。
+1. 下载 [Claude-runtime-zh-v0.5.1.zip](https://github.com/Su-1003/claude-runtime-zh/raw/refs/heads/main/release-assets/v0.5.1/Claude-runtime-zh-v0.5.1.zip)，完整解压到有写入权限的普通文件夹。SHA-256 校验值见同目录的 `SHA256SUMS.txt`。
 2. 打开 Claude Desktop。首次使用需由本人启用 Claude 的 **Developer Mode**；开发者工具若显示粘贴安全提示，请本人阅读并处理。
 3. 双击 **一键启动汉化.cmd**。执行期间暂停键鼠及剪贴板操作，避免焦点或复制内容被改变。
 4. 等待出现 `SUCCESS`，确认 Claude 界面变为中文。需要恢复时，双击 **一键恢复英文.cmd**。
