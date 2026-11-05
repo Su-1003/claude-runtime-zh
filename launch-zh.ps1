@@ -296,7 +296,7 @@ function Get-DevToolsPageKind([string]$title) {
     if (-not [Uri]::TryCreate($title.Substring('Developer Tools - '.Length), [UriKind]::Absolute, [ref]$address)) { return 'unknown' }
     if (-not (($address.Scheme -ceq 'app' -and $address.Host -ceq 'localhost') -or ($address.Scheme -ceq 'https' -and $address.Host -ceq 'claude.ai'))) { return 'unknown' }
     if ($address.AbsolutePath -ceq '/setup-desktop-3p') { return 'configuration' }
-    if ($address.AbsolutePath -eq '/' -or $address.AbsolutePath -match '^/(new|cowork|chat|project|projects|artifacts|recents|customize|scheduled-task)(/|$)') { return 'main' }
+    if ($address.AbsolutePath -eq '/' -or $address.AbsolutePath -match '^/(new|cowork|chat|chats|project|projects|artifacts|recents|customize|scheduled-task)(/|$)') { return 'main' }
     return 'unknown'
 }
 function Open-ClaudeDevTools($main, [bool]$ConfigurationTarget = $false) {

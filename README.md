@@ -4,11 +4,11 @@
 
 A third-party Chinese interface script for Claude Desktop on Windows. Run the launcher to translate interface text in the current window. Page translation must be reapplied after a restart or full page refresh. Native menu language persists until restored.
 
-**Current version: v0.5.0. This is not an official Anthropic project.**
+**Current version: v0.5.1. This is not an official Anthropic project.**
 
 ## Download and use
 
-1. Download `Claude-runtime-zh-v0.5.0.zip` from [Releases](https://github.com/Su-1003/claude-runtime-zh/releases/latest) and extract the entire archive to a writable folder.
+1. Download `Claude-runtime-zh-v0.5.1.zip` from [Releases](https://github.com/Su-1003/claude-runtime-zh/releases/latest) and extract the entire archive to a writable folder.
 2. Open Claude Desktop. Before first use, enable **Developer Mode** yourself. If DevTools shows a paste safety prompt, review and handle it yourself.
 3. Double-click **一键启动汉化.cmd** (apply Chinese). Avoid using the keyboard, mouse, or clipboard while it runs so that focus and copied content remain stable.
 4. Wait for `SUCCESS` and confirm that the interface is in Chinese. To restore English, double-click **一键恢复英文.cmd** (restore English).
